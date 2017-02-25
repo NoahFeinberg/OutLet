@@ -4,9 +4,9 @@ import os, csv
 with open('train.csv', 'w') as csvfile:
     for i in os.listdir(os.getcwd() + '/training_set'):
         if 'D' in i:
-            party = 'D'
+            party = 'pos'
         else:
-            party = 'R'
+            party = 'neg'
 
         segment = open('training_set/' + i, 'rb')
         segment = ''.join(segment.readlines()).replace('\n', '')
