@@ -19,6 +19,20 @@
     overflow-x: hidden;
 }
 
+.table1 {
+    position: relative;
+    text-align: center;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+.hidden {
+    display:none;
+}
+
 
 
 
