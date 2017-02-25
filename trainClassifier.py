@@ -1,10 +1,10 @@
 from textblob.classifiers import NaiveBayesClassifier
 import cPickle as pickle
 
-with open('train.csv', 'r') as fp:
+with open('train_500.csv', 'r') as fp:
     print "Started Training"
     cl = NaiveBayesClassifier(fp, format="csv")
-    trained_classifier_file = open('trained_classifier.pickle', 'wb')
+    trained_classifier_file = open('trained_classifier_500.pickle', 'wb')
     pickle.dump(cl, trained_classifier_file)
     print "Stop Training"
 
