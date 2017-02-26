@@ -7,7 +7,6 @@ orig_urls = ['http://www.breitbart.com/big-journalism/2015/09/26/washington-post
              'https://www.theguardian.com/membership/2016/feb/24/todays-release-of-accelerated-mobile-pages-amp',
              'http://bit.ly/28lya4p']
 
-api_key = 'AIzaSyCLF2m36RARqj-FFfPOcbBCLHW1TCDDt8k'
 
 data = dict(key=api_key, urls=orig_urls)
 
