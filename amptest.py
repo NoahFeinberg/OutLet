@@ -27,20 +27,20 @@ orig_urls = ['http://www.dw.com/en/us-democrats-pick-tom-perez-as-new-chairman/a
              'http://bit.ly/28lya4p']
 
 
-def makeReq(query):
-    resp = unirest.post("http://httpbin.org/post", headers={"Accept": "application/json"},
-                            params={"parameter": 23, "foo": "bar"})
+def makeReq(query, token):
+    resp = unirest.post("https://webhose.io/search", headers={"Accept": "application/json"},
+                            params={"q": query, "thread.country": "United States",
+                                    "site_type": "news", "domain_rank": '<=2500',
+                                    "token": token,
+                                    "size": 2
+                                    })
 
     print resp.code  # The HTTP status code
     print resp.headers  # The HTTP headers
     print resp.body  # The parsed response
     print resp.raw_body  # The unparsed response
 
-    api_key = raw_input('Api key: ')
-    data = dict(key=api_key, urls=orig_urls)
-
-    r = requests.post(url, data=data, allow_redirects=True)
-    amp_request = r.json()
+    amp_request = resp.raw_body
     print(amp_request)
     parser = TitleParser()
 
@@ -65,4 +65,4 @@ def makeReq(query):
             print(html)
 
 
-makeReq('chuck')
+makeReq('tesla', '2e75b4df-809f-4f48-904d-dfd4c2615f60')
