@@ -13,6 +13,8 @@ import time
 
 # print parser.parse(query)
 
+
+
 cl = pickle.load(open('trained_classifier.pickle', 'r'))
 query = raw_input("Article: ")
 

@@ -1,6 +1,8 @@
 import requests
-import urllib.request
-from html.parser import HTMLParser
+import urllib
+from HTMLParser import HTMLParser
+import html2text, unirest
+
 
 class TitleParser(HTMLParser):
     def __init__(self):
@@ -16,35 +18,51 @@ class TitleParser(HTMLParser):
             self.title = data
             self.match = False
 
+
+
 url = 'https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet'
 
-orig_urls = ['http://www.breitbart.com/big-journalism/2015/09/26/washington-post-confirms-hillary-clinton-started-the-birther-movement/',
+orig_urls = ['http://www.dw.com/en/us-democrats-pick-tom-perez-as-new-chairman/a-37718486',
              'https://www.theguardian.com/membership/2016/feb/24/todays-release-of-accelerated-mobile-pages-amp',
              'http://bit.ly/28lya4p']
 
-api_key = input('Api key: ')
-data = dict(key=api_key, urls=orig_urls)
 
-r = requests.post(url, data=data, allow_redirects=True)
-amp_request = r.json()
-print(amp_request)
-parser = TitleParser()
+def makeReq(query):
+    resp = unirest.post("http://httpbin.org/post", headers={"Accept": "application/json"},
+                            params={"parameter": 23, "foo": "bar"})
 
-for ampUrl in amp_request['ampUrls']:
-    response = urllib.request.urlopen(ampUrl['cdnAmpUrl'])
-    html = str(response.read())
-    parser.feed(html)
-    title = parser.title
-    print(title)
-    print(html)
+    print resp.code  # The HTTP status code
+    print resp.headers  # The HTTP headers
+    print resp.body  # The parsed response
+    print resp.raw_body  # The unparsed response
 
-if 'urlErrors' in amp_request:
-    for normalUrl in amp_request['urlErrors']:
-        response = urllib.request.urlopen(normalUrl['originalUrl'])
+    api_key = raw_input('Api key: ')
+    data = dict(key=api_key, urls=orig_urls)
+
+    r = requests.post(url, data=data, allow_redirects=True)
+    amp_request = r.json()
+    print(amp_request)
+    parser = TitleParser()
+
+    for ampUrl in amp_request['ampUrls']:
+        response = urllib.urlopen(ampUrl['cdnAmpUrl'])
         html = str(response.read())
+        html = html.decode('ascii', errors='ignore')
         parser.feed(html)
         title = parser.title
-        print(title)
+        html = html2text.html2text(html)
+        #print(title)
         print(html)
 
+    if 'urlErrors' in amp_request:
+        for normalUrl in amp_request['urlErrors']:
+            response = urllib.urlopen(normalUrl['originalUrl'])
+            html = str(response.read())
+            html = html.decode('ascii', errors='ignore')
+            parser.feed(html)
+            title = parser.title
+            print(title)
+            print(html)
 
+
+makeReq('chuck')
