@@ -98,8 +98,6 @@ def modifyNews(textData):
         password=json_watson_config['TONE_ANALYZER']['password'],
         version='2016-05-19')
 
-    json_watson_config.close()
-
     sentences = tokenize.sent_tokenize(query.decode('ascii', errors="ignore"))
 
     newParagraph = ""
