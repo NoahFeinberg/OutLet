@@ -32,14 +32,14 @@
             <div class="col-md-18 panel panel-default background">
                 <div class="panel-heading">
                     <div class= "row">
-                        <div class="col-md-16">{title}</div>
+                        <div class="col-md-16">{{ title }}</div>
                         <div class="col-md-4">
                             <input type ="button" value="remove bias">
                         </div>
                     </div>
                 </div>
                 <div class="panel-body textColor">
-                    {body}
+                    {{ body }}
                 </div>
             </div>
             <div class="background col-md-1"></div>
@@ -49,15 +49,15 @@
         <div class= "row " id="articleMod" >
             <div class="background col-md-1"></div>
             <div class="background col-md-9 panel panel-default">
-                <div class="panel-heading">{title}</div>
+                <div class="panel-heading">{{ title }}</div>
                 <div class="panel-body textColor">
-                    {body}
+                    {{ body }}
                 </div>
             </div>
             <div class="background col-md-9 panel panel-default" >
-                <div class="panel-heading">{title} Modifed</div>
+                <div class="panel-heading">{{ title }} Modified</div>
                 <div class="panel-body textColor">
-                    {body}
+                    {{ newbody }}
                 </div>
             </div>
             <div class="background col-md-1"></div>

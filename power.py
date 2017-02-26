@@ -27,26 +27,16 @@ class TitleParser(HTMLParser):
             self.match = False
 
 
-
-url = 'https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet'
-
-orig_urls = ['http://www.dw.com/en/us-democrats-pick-tom-perez-as-new-chairman/a-37718486',
-             'https://www.theguardian.com/membership/2016/feb/24/todays-release-of-accelerated-mobile-pages-amp',
-             'http://bit.ly/28lya4p']
-
-
 def makeReq(query, token):
-    resp = unirest.post("https://webhose.io/search", headers={"Accept": "application/json"},
-                            params={"q": query, "thread.country": "United States",
-                                    "site_type": "news", "domain_rank": '<=2500',
-                                    "token": token,
-                                    "size": 2
-                                    })
 
-    print resp.code  # The HTTP status code
-    print resp.headers  # The HTTP headers
-    print resp.body  # The parsed response
-    print resp.raw_body  # The unparsed response
+    url = 'https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet'
+
+    resp = unirest.post("https://webhose.io/search", headers={"Accept": "application/json"},
+            params={"q": query, "thread.country": "United States",
+                    "site_type": "news", "domain_rank": '<=2500',
+                    "token": token,
+                    "size": 2
+                    })
 
     amp_request = resp.raw_body
     print(amp_request)
@@ -59,8 +49,6 @@ def makeReq(query, token):
         parser.feed(html)
         title = parser.title
         html = html2text.html2text(html)
-        #print(title)
-        print(html)
 
     if 'urlErrors' in amp_request:
         for normalUrl in amp_request['urlErrors']:
@@ -69,8 +57,9 @@ def makeReq(query, token):
             html = html.decode('ascii', errors='ignore')
             parser.feed(html)
             title = parser.title
-            print(title)
-            print(html)
+
+
+    return zip(html,title)
 
 
 def analyze(query):
@@ -78,14 +67,11 @@ def analyze(query):
     query = query.decode('ascii', errors="ignore")
     output = TextBlob(query, classifier=cl, analyzer=NaiveBayesAnalyzer())
 
-    return
+    return output
 
 def modifyNews(textData):
     # Initialize the dictionary
     dictionary = PyDictionary()
-
-    # This code is for training TNT Tagger
-    # Not necessary when using pickle file
 
     # Use the pickle file if you do not want to retrain the object
     tnt_pos_tagger = pickle.load(open('tnt_brown_pos_tagger.pickle'), 'r')
@@ -135,6 +121,7 @@ def modifyNews(textData):
 
 
 def txttocsv():
+
     dcount = 0
     rcount = 0
 
@@ -157,7 +144,5 @@ def txttocsv():
             else:
 
                 break
-
-    print 'all done'
 
     return
