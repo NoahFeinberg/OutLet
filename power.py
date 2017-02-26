@@ -8,6 +8,7 @@ import cPickle as pickle
 import nltk
 import pickle
 from watson_developer_cloud import AlchemyLanguageV1, ToneAnalyzerV3
+import json
 from nltk import tokenize
 from PyDictionary import PyDictionary
 
@@ -27,8 +28,9 @@ class TitleParser(HTMLParser):
             self.match = False
 
 
-def makeReq(query, token):
+#def makeReq(text_string):
 
+    """
     url = 'https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet'
 
     resp = unirest.post("https://webhose.io/search", headers={"Accept": "application/json"},
@@ -58,12 +60,12 @@ def makeReq(query, token):
             parser.feed(html)
             title = parser.title
 
-
     return zip(html,title)
-
-
+    """
 def analyze(query):
-    cl = pickle.load(open('trained_classifier.pickle', 'r'))
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "trained_classifier.pickle")
+    cl = pickle.load(open(json_url))
     query = query.decode('ascii', errors="ignore")
     output = TextBlob(query, classifier=cl, analyzer=NaiveBayesAnalyzer())
 
@@ -73,10 +75,15 @@ def modifyNews(textData):
     # Initialize the dictionary
     dictionary = PyDictionary()
 
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "config.json")
+    json_watson_config = json.load(open(json_url))
+
     # Use the pickle file if you do not want to retrain the object
-    tnt_pos_tagger = pickle.load(open('tnt_brown_pos_tagger.pickle'), 'r')
+    tnt_url = os.path.join(SITE_ROOT, "tnt_brown_pos_tagger.pickle")
+    tnt_pos_tagger = pickle.load(open(tnt_url))
     query = textData.decode('ascii', errors="ignore")
-    alchemy_language = AlchemyLanguageV1(api_key='4c390db1d45633cef4dcff9f91f404618194807e')
+    alchemy_language = AlchemyLanguageV1(api_key=json_watson_config['Alchemy_API_Key'])
     entities_alchemy = alchemy_language.combined(
         text=query.decode('ascii', errors="ignore"),
         extract='entities,keywords',
@@ -87,9 +94,11 @@ def modifyNews(textData):
         entity_list.append(entity['text'])
 
     tone_analyzer = ToneAnalyzerV3(
-        username='25cd5253-a691-466c-a5ee-5a00823ebefd',
-        password='1DkgWn4x0QG3',
+        username=json_watson_config['TONE_ANALYZER']['user'],
+        password=json_watson_config['TONE_ANALYZER']['password'],
         version='2016-05-19')
+
+    json_watson_config.close()
 
     sentences = tokenize.sent_tokenize(query.decode('ascii', errors="ignore"))
 

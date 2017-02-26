@@ -16,12 +16,12 @@
     <br>
     <div class="row">
         <div id="header"  class="col-md-1">
-            <div id="searchForm" >
-                <input id="searchBar"  type="text" placeholder="Search" src = "../static/assets/image/search.png" />
-                <input id="searchButton"  type ="image" value="search"  src = "../static/assets/image/search.png"/>
+            <form method="post" action="/viewArticle"  id="searchForm" >
+                <input id="searchBar" name="searchBar"  type="text" placeholder="Search" src = "../static/assets/image/search.png" />
+                <input id="searchButton" type ="image" value="search"  src = "../static/assets/image/search.png"/>
                 <img id="Logo" class="col-md-1" type="image"  src = "../static/assets/image/Logo.png" style="width: 104px; height:29px;"/>
-                <input id="apiToken"  type="text" placeholder="Your API Token" src = "../static/assets/image/search.png" />
-            </div>
+                <!--<input id="apiToken" name="apiToken" type="text" placeholder="Your API Token" src = "../static/assets/image/search.png" />-->
+            </form>
         </div>
         <div class="col-md-1"></div>
     </div>
@@ -32,14 +32,14 @@
             <div class="col-md-18 panel panel-default background">
                 <div class="panel-heading">
                     <div class= "row">
-                        <div class="col-md-16">{{ title }}</div>
+                        <div class="col-md-16">Text Comparison</div>
                         <div class="col-md-4">
                             <input type ="button" value="remove bias">
                         </div>
                     </div>
                 </div>
                 <div class="panel-body textColor">
-                    {{ body }}
+                    {{ article }}
                 </div>
             </div>
             <div class="background col-md-1"></div>
@@ -49,13 +49,13 @@
         <div class= "row " id="articleMod" >
             <div class="background col-md-1"></div>
             <div class="background col-md-9 panel panel-default">
-                <div class="panel-heading">{{ title }}</div>
+                <div class="panel-heading">Orig Article</div>
                 <div class="panel-body textColor">
-                    {{ body }}
+                    {{ article }}
                 </div>
             </div>
             <div class="background col-md-9 panel panel-default" >
-                <div class="panel-heading">{{ title }} Modified</div>
+                <div class="panel-heading">Modified</div>
                 <div class="panel-body textColor">
                     {{ newbody }}
                 </div>
@@ -63,16 +63,22 @@
             <div class="background col-md-1"></div>
         </div>
     </div>
+    <!--
     <div class="row">
         <div class="col-md-1"></div>
         <div class="background col-md-18 container-fluid panel panel-default">
             <table class="table textColor" id="table-control">
-                <tr class="panel-body" style="font-size: 16px;font-weight: bold" b >
+                <tr class="panel-body" style="font-size: 16px;font-weight: bold">
                     <td>Article Title</td>
                 <td style="width:30%;">Source</td>
                 </tr>
                 {% for result in searchresults %}
-                <tr class="panel-body clickable">
+                    <form method="POST" id="{{ result.title }}_form" action="/viewArticle">
+                        <input id="article_title" name="article_title" value="{{ result.title }}" type="hidden">
+                        <input id="article_body" name="article_body" value="{{ result.body }}" type="hidden">
+                        <input id="article_new_body" name="article_new_body" value="{{ result.new_body }}" type="hidden">
+                    </form>
+                <tr class="panel-body clickable" onclick="$('#{{ result.title }}_form').submit()">
                     <td>{{ result.title }}</td>
                     <td class= "newsSource">{{ result.source }}</td>
                 </tr>
@@ -80,6 +86,7 @@
             </table>
         </div>
     </div>
+    -->
     <div class="col-md-1"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="../static/js/visibility.js"></script>
